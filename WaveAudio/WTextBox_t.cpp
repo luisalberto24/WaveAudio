@@ -39,7 +39,7 @@ LRESULT WTextBox_t::OnColorChange(WPARAM wParam, LPARAM lParam)
 		-this->attributes.Coordinates.top, 
 		-this->attributes.Coordinates.left);
 
-	return (LONG)solidBrush; 
+	return (LRESULT)solidBrush; 
 }
 
 LRESULT WTextBox_t::OnClick(WPARAM wParam, LPARAM lParam)

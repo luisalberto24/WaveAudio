@@ -108,7 +108,7 @@ BOOL Utilities::GetDirectoryName(std::wstring& folder, std::wstring caption, HWN
 		caption = L"Get Folder Name";
 	}
 
-	browseInfo.lpszTitle = caption.c_str();
+	browseInfo.lpszTitle = _bstr_t(caption.c_str());
 
 	::OleInitialize(NULL);
 
@@ -117,7 +117,7 @@ BOOL Utilities::GetDirectoryName(std::wstring& folder, std::wstring caption, HWN
 	{
 		wstring buffer = new wchar_t[_MAX_PATH + 1];
 		buffer[_MAX_PATH] = '\x0';
-		if (::SHGetPathFromIDList(itemIdListPtr, (LPWSTR)buffer.c_str()) != 0)
+		if (::SHGetPathFromIDListEx(itemIdListPtr, (LPWSTR)buffer.c_str(), _MAX_PATH, GPFIDL_DEFAULT) != 0)
 		{
 			folder = buffer;
 			result = TRUE;

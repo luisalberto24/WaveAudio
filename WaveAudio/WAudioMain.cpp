@@ -19,10 +19,10 @@ using namespace std;
 VOID RegisterWindowControls(Window_t*);
 
 // Program entry point
-int APIENTRY wWinMain(
+int APIENTRY WinMain(
 	_In_ HINSTANCE hInstance, 
 	_In_opt_ HINSTANCE hPrevInstance,
-	_In_ LPWSTR    lpCmdLine, 
+	_In_ LPSTR    lpCmdLine, 
 	_In_ int nCmdShow)
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
