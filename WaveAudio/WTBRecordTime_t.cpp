@@ -12,7 +12,7 @@ WTBRecordTime_t::WTBRecordTime_t(WControlAttributes_t& attributes) : WTextBox_t:
 WTBRecordTime_t::~WTBRecordTime_t() 
 {
 	WTextBox_t::WTextBox_t();
-};
+}
 
 LRESULT	WTBRecordTime_t::OnCreate(WPARAM wParam, LPARAM lParam)
 {
