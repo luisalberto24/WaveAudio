@@ -267,7 +267,7 @@ static LRESULT CALLBACK StaticWindowProcedure(HWND hWnd, UINT message, WPARAM wP
 								attr.Created = TRUE;
 								control->SetAttributes(attr);
 
-								return control->OnCreate(wParam, lParam);
+								control->OnCreate(wParam, lParam);
 							}
 						}
 					}

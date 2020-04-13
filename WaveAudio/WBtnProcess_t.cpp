@@ -24,7 +24,7 @@ WBtnProcess_t::~WBtnProcess_t()
 LRESULT WBtnProcess_t::OnClick(WPARAM wParam, LPARAM lParam)
 {
 	Window_t* window = (Window_t*)this->GetWindow();
-	WControl_t* directoryCtrl	= (WControl_t*)window->GetControl< ControlTypes::EDIT>(ID_EDIT_FOLDERNAME);
+	WControl_t* directoryCtrl	= (WControl_t*)window->GetControl<ControlTypes::EDIT>(ID_EDIT_FOLDERNAME);
 	WControl_t* fileNameCtrl	= (WControl_t*)window->GetControl<ControlTypes::EDIT>(ID_EDIT_FILENAME);
 	if (directoryCtrl && fileNameCtrl)
 	{
