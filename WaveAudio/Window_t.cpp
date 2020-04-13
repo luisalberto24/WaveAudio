@@ -130,12 +130,6 @@ MSG	Window_t::Loop()
 	return message;
 }
 
-const WControl_t* Window_t::GetControl(WORD controlId, ControlTypes controlTypeId)
-{
-	DWORD controlIndex = GET_CTRL_TYPE_INDEX(controlId, controlTypeId);
-	return controlIndex >= 0 ? this->controls[(controlTypeId - 1)][controlIndex] : nullptr;
-}
-
 const	WControlsArray_t* Window_t::GetAllControls()
 {
 	return &this->controls;

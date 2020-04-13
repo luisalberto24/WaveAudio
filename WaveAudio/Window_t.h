@@ -38,7 +38,12 @@ class Window_t
 			controlAttributes.Window = (VOID*)this;
 			this->controls[controlAttributes.TypeId - 1][controlIndex] = new T(controlAttributes);
 		}
-		const	WControl_t*			GetControl					(WORD controlId, ControlTypes controlTypeId);
+		template<ControlTypes typeId>
+		const	WControl_t*			GetControl(WORD controlId)
+		{
+			DWORD controlIndex = GET_CTRL_TYPE_INDEX(controlId, typeId);
+			return controlIndex >= 0 ? this->controls[(typeId - 1)][controlIndex] : nullptr;
+		}
 		const	WControlsArray_t*	GetAllControls				();
 		VOID						SetWindowProcedure			(const WNDPROC wndProcedure);	
 		VOID						SetWindowMessageProcedure	(const WNDMESSAGELOOPPROC wndMessageProcedure);

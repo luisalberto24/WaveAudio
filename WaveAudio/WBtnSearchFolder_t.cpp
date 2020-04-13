@@ -16,7 +16,7 @@ WBtnSearchFolder_t::~WBtnSearchFolder_t()
 LRESULT	WBtnSearchFolder_t::OnClick(WPARAM wParam, LPARAM lParam)
 {
 	Window_t* window = (Window_t*)this->GetWindow();
-	WControl_t* control = (WControl_t*)window->GetControl(ID_EDIT_FOLDERNAME, ControlTypes::EDIT);
+	WControl_t* control = (WControl_t*)window->GetControl<ControlTypes::EDIT>(ID_EDIT_FOLDERNAME);
 	if (control)
 	{
 		HWND windowHandler = window->GetHandler();

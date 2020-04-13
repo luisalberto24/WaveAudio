@@ -14,7 +14,7 @@ WSpinner_t::~WSpinner_t()
 LRESULT	WSpinner_t::OnCreate(WPARAM wParam, LPARAM lParam)
 {
 	Window_t* window = (Window_t*)this->GetWindow();
-	WControl_t* editRecortTimeCtrl = (WControl_t*)window->GetControl(ID_EDIT_RECORD_TIME, ControlTypes::EDIT);
+	WControl_t* editRecortTimeCtrl = (WControl_t*)window->GetControl<ControlTypes::EDIT>(ID_EDIT_RECORD_TIME);
 	if (editRecortTimeCtrl)
 	{
 		HWND handler = editRecortTimeCtrl->GetControlHandler();

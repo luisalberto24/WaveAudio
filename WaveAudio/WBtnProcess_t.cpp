@@ -24,8 +24,8 @@ WBtnProcess_t::~WBtnProcess_t()
 LRESULT WBtnProcess_t::OnClick(WPARAM wParam, LPARAM lParam)
 {
 	Window_t* window = (Window_t*)this->GetWindow();
-	WControl_t* directoryCtrl	= (WControl_t*)window->GetControl(ID_EDIT_FOLDERNAME, ControlTypes::EDIT);
-	WControl_t* fileNameCtrl	= (WControl_t*)window->GetControl(ID_EDIT_FILENAME, ControlTypes::EDIT);
+	WControl_t* directoryCtrl	= (WControl_t*)window->GetControl< ControlTypes::EDIT>(ID_EDIT_FOLDERNAME);
+	WControl_t* fileNameCtrl	= (WControl_t*)window->GetControl<ControlTypes::EDIT>(ID_EDIT_FILENAME);
 	if (directoryCtrl && fileNameCtrl)
 	{
 		HWND windowHandler = window->GetHandler();
@@ -38,14 +38,14 @@ LRESULT WBtnProcess_t::OnClick(WPARAM wParam, LPARAM lParam)
 			fileName.append(L"\\");
 			fileName.append(fileNameCtrl->GetText().substr(0, fileNameLength));
 
-			WControl_t* editRecordTimeCtrl = (WControl_t*)window->GetControl(ID_EDIT_RECORD_TIME, ControlTypes::EDIT);
+			WControl_t* editRecordTimeCtrl = (WControl_t*)window->GetControl<ControlTypes::EDIT>(ID_EDIT_RECORD_TIME);
 			if (editRecordTimeCtrl)
 			{
 				this->Disable();
 				try
 				{
 					DWORD recordTime = atoi(_bstr_t(editRecordTimeCtrl->GetText().c_str()));
-					WProgressBar_t* progressBar = (WProgressBar_t*)window->GetControl(ID_PB_PROGRESS, ControlTypes::PROGRESSBAR);
+					WProgressBar_t* progressBar = (WProgressBar_t*)window->GetControl<ControlTypes::PROGRESSBAR>(ID_PB_PROGRESS);
 					progressBar->SetRange(1, recordTime);
 					progressBar->SetStep(1);
 					WaveAudio_t waveAudio(window);
