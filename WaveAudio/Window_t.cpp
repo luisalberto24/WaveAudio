@@ -243,10 +243,9 @@ static LRESULT CALLBACK StaticWindowProcedure(HWND hWnd, UINT message, WPARAM wP
 						if ((*controls)[controlType][controlIndex])
 						{
 							WControl_t* control = (*controls)[controlType][controlIndex];
-							if (!control->GetAttributes().Created)
-							{
-								WControlAttributes_t attr = control->GetAttributes();
-								attr.ParentHandler = hWnd;
+							WControlAttributes_t attr = control->GetAttributes();
+							if (!attr.Created)
+							{	attr.ParentHandler = hWnd;
 								attr.ModuleId = moduleId;
 								attr.Window = window;
 
@@ -268,7 +267,7 @@ static LRESULT CALLBACK StaticWindowProcedure(HWND hWnd, UINT message, WPARAM wP
 								attr.Created = TRUE;
 								control->SetAttributes(attr);
 
-								control->OnCreate(wParam, lParam);
+								return control->OnCreate(wParam, lParam);
 							}
 						}
 					}
