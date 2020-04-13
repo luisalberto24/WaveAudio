@@ -40,12 +40,12 @@ UINT_PTR WProgressBar_t::GetPosition()
 
 LRESULT WProgressBar_t::SetPosition(DWORD position)
 {
-	return ::SendMessageW(this->attributes.Handler, PBM_SETPOS, (LPARAM)position, 0);
+	return ::SendMessageW(this->attributes.Handler, PBM_SETPOS, (WPARAM)position, 0);
 }
 
 LRESULT	WProgressBar_t::SetStep(DWORD step)
 {
-	return ::SendMessageW(this->attributes.Handler, PBM_SETSTEP, (LPARAM)step, 0);
+	return ::SendMessageW(this->attributes.Handler, PBM_SETSTEP, (WPARAM)step, 0);
 }
 
 LRESULT	WProgressBar_t::StepIt()
