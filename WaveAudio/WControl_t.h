@@ -28,7 +28,6 @@ class WControl_t : public IWControl_t
 										WControl_t			();
 										WControl_t			(WControlAttributes_t attributes);
 		virtual							~WControl_t			();
-	
 	public:
 		const	VOID*					GetWindow			();
 				HWND					GetControlHandler	();
@@ -56,8 +55,6 @@ class WControl_t : public IWControl_t
 				VOID					Enable				();
 				VOID					Disable				();
 				VOID					SetBuddy			(HWND buddyHandler);
-	
-
 	protected:
 				WControlAttributes_t	attributes;
 				VOID*					parentWindow;

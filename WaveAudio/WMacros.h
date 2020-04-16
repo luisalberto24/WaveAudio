@@ -60,7 +60,7 @@
 	#if (!defined(END_VALIDATE_WINDOW_CONTROL_TYPE))
 	#	define	END_VALIDATE_WINDOW_CONTROL_TYPE					}
 	#endif
-	
+
 	#if (!defined(FREE_NEW))
 	#	define	FREE_MEMORY_WITH_NEW(pointer)						if (pointer) {delete pointer; pointer = nullptr};
 	#endif

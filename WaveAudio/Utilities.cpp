@@ -1,4 +1,5 @@
 #include "Utilities.h"
+#include <Vector>
 
 VOID Utilities::ToUpper(std::wstring& value)
 {

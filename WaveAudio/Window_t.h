@@ -24,12 +24,18 @@ class Window_t
 		Window_t	(HINSTANCE instance, std::wstring className, std::wstring windowName, std::wstring windowTitle);
 		~Window_t	();
 	public:
-		const HINSTANCE	GetInstance	();
-		const HWND		GetHandler	();
+		const HINSTANCE											GetInstance	();
+		const HWND												GetHandler	();
 	
 	public:
 		BOOL						Show						(int showCommand);
 		MSG							Loop						();
+		const	WControlsArray_t*	GetAllControls				();
+		VOID						SetWindowProcedure			(const WNDPROC wndProcedure);	
+		VOID						SetWindowMessageProcedure	(const WNDMESSAGELOOPPROC wndMessageProcedure);
+		inline ControlTypes			GetControlType				(DWORD controlId);
+		inline ControlTypes			GetControlType				(HWND controlHandler);
+	public: // templates			
 		template<typename T>
 		VOID						RegisterControl				(WControlAttributes_t controlAttributes)
 		{
@@ -38,17 +44,19 @@ class Window_t
 			controlAttributes.Window = (VOID*)this;
 			this->controls[controlAttributes.TypeId - 1][controlIndex] = new T(controlAttributes);
 		}
+		
 		template<ControlTypes typeId>
-		const	WControl_t*			GetControl(WORD controlId)
+		const	WControl_t*			GetControl					(WORD controlId)
 		{
 			DWORD controlIndex = GET_CTRL_TYPE_INDEX(controlId, typeId);
 			return controlIndex >= 0 ? this->controls[(typeId - 1)][controlIndex] : nullptr;
 		}
-		const	WControlsArray_t*	GetAllControls				();
-		VOID						SetWindowProcedure			(const WNDPROC wndProcedure);	
-		VOID						SetWindowMessageProcedure	(const WNDMESSAGELOOPPROC wndMessageProcedure);
-		inline ControlTypes			GetControlType				(DWORD controlId);
-			
+
+		template<typename T, typename ...Ts>
+		WControl_t*					GetControlInTypes			(HWND controlHandler, T firstType, Ts... types);
+
+		template<typename T, typename ...Ts>
+		WControl_t*					GetControlOutOfTypes		(HWND controlHandler, T firstType, Ts... types);
 	public:
 		static	ControlTypes		GetControlType				(HWND windowHandler, DWORD controlId);
 		static	std::wstring		GetLastErrorMessage			();
@@ -68,5 +76,4 @@ class Window_t
 		WNDCLASSEXW			windowclass;
 		
 };
-
 #endif

@@ -39,27 +39,37 @@ LRESULT WBtnProcess_t::OnClick(WPARAM wParam, LPARAM lParam)
 			fileName.append(fileNameCtrl->GetText().substr(0, fileNameLength));
 
 			WControl_t* editRecordTimeCtrl = (WControl_t*)window->GetControl<ControlTypes::EDIT>(ID_EDIT_RECORD_TIME);
-			if (editRecordTimeCtrl)
+			WControl_t* searchButtonCtrl = (WControl_t*)window->GetControl<ControlTypes::BUTTON>(ID_BTN_SEARCH_FOLDER);
+
+			this->Disable();
+			fileNameCtrl->Disable();
+			editRecordTimeCtrl->Disable();
+			searchButtonCtrl->Disable();
+
+			try
 			{
-				this->Disable();
-				try
-				{
-					DWORD recordTime = atoi(_bstr_t(editRecordTimeCtrl->GetText().c_str()));
-					WProgressBar_t* progressBar = (WProgressBar_t*)window->GetControl<ControlTypes::PROGRESSBAR>(ID_PB_PROGRESS);
-					progressBar->SetRange(1, recordTime);
-					progressBar->SetStep(1);
-					WaveAudio_t waveAudio(window);
-					waveAudio.Record(recordTime, DoWhileRecording, (VOID*)progressBar);
-					waveAudio.Save(fileName);
+				DWORD recordTime = atoi(_bstr_t(editRecordTimeCtrl->GetText().c_str()));
+				WProgressBar_t* progressBar = (WProgressBar_t*)window->GetControl<ControlTypes::PROGRESSBAR>(ID_PB_PROGRESS);
+				progressBar->SetRange(1, recordTime);
+				progressBar->SetStep(1);
+				WaveAudio_t waveAudio(window);
+				waveAudio.Record(recordTime, DoWhileRecording, (VOID*)progressBar);
+				waveAudio.Save(fileName);
 
-					MessageBoxW(windowHandler, fileName.c_str(), L"File saved!", MB_ICONINFORMATION | MB_OK);
+				MessageBoxW(windowHandler, fileName.c_str(), L"File saved!", MB_ICONINFORMATION | MB_OK);
 
-					progressBar->SetRange(0, 0);
-				}
-				catch (...) {}
-
-				this->Enable();
+				progressBar->SetRange(0, 0);
 			}
+			catch (...) {}
+			
+			searchButtonCtrl->Enable();
+			editRecordTimeCtrl->Enable();
+			fileNameCtrl->Enable();
+			this->Enable();
+		}
+		else
+		{
+			MessageBoxW(windowHandler, L"Invalid folder and/or filename.", L"Error!", MB_ICONERROR | MB_OK);
 		}
 	}
 

@@ -17,6 +17,20 @@ class Utilities
 		static			BOOL			DirectoryExists			(const std::wstring& directoryName);
 		static			DWORD			GetDialogFileName		(std::wstring& filePath);
 		static			BOOL			GetDirectoryName		(std::wstring& folder, std::wstring caption = NULL, HWND ownerHandler = NULL);
+		template<typename T, typename... Ts>
+		static			BOOL			Find(T a, Ts... arguments)
+		{
+			T elements[] = { a, arguments... };
+			DWORD i = 1;
+			for (; i < sizeof...(Ts) + 1; i++) {
+				if (elements[0] == elements[i])
+				{
+					break;
+				}
+			}
+
+			return i != (sizeof...(Ts) + 1);
+		}
 };
 
 #endif

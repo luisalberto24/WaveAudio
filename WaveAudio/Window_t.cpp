@@ -1,3 +1,4 @@
+#include <vector>
 #include "Window_t.h"
 
 Window_t::Window_t()
@@ -204,12 +205,18 @@ inline ControlTypes	Window_t::GetControlType(DWORD controlId)
 	return Window_t::GetControlType(this->handler, controlId);
 }
 
+inline ControlTypes	Window_t::GetControlType(HWND controlHandler)
+{
+	int controlId = GetDlgCtrlID(controlHandler);
+	return Window_t::GetControlType(this->handler, controlId);
+}
+
 ControlTypes Window_t::GetControlType(HWND windowHandler, DWORD controlId)
 {
 	HWND controlHwnd = GetDlgItem(windowHandler, controlId);
 	std::wstring controlType(MAX_BUFFER_SIZE, 0);
 	GetClassNameW(controlHwnd, (LPWSTR)controlType.c_str(), MAX_BUFFER_SIZE);
-	if (controlType.length() > 0)
+	if (!controlType.empty())
 	{
 		Utilities::ToLower(controlType);
 		LPCWSTR data = controlType.c_str();
@@ -224,8 +231,67 @@ ControlTypes Window_t::GetControlType(HWND windowHandler, DWORD controlId)
 	return ControlTypes::UNKNOWN;
 }
 
+template<typename T, typename ...Ts>
+WControl_t* Window_t::GetControlInTypes(HWND controlHandler, T firstType, Ts... types)
+{
+	if (controlHandler)
+	{
+		WControl_t* control = this->GetControlInTypes(controlHandler, firstType);
+		return control ? control : this->GetControlInTypes(controlHandler, types...);
+	}
+	
+	return nullptr;
+}
+
+template<>
+WControl_t* Window_t::GetControlInTypes(HWND controlHandler, ControlTypes cType)
+{
+	if (controlHandler)
+	{
+		int controlId = GetDlgCtrlID(controlHandler);
+		ControlTypes controlType = Window_t::GetControlType(this->handler, controlId);
+		if (cType == controlType)
+		{
+			DWORD controlIndex = GET_CTRL_TYPE_INDEX(controlId, controlType);
+			if (controlIndex >= 0)
+			{
+				return this->controls[controlType - 1][controlIndex];
+			}
+		}
+	}
+
+	return nullptr;
+}
+
+template<typename T, typename ...Ts>
+WControl_t* Window_t::GetControlOutOfTypes(HWND controlHandler, T firstType, Ts... types)
+{
+	if (controlHandler)
+	{
+		int controlId = GetDlgCtrlID(controlHandler);
+		ControlTypes controlType = Window_t::GetControlType(this->handler, controlId);
+
+		if (!Utilities::Find(controlType, firstType, types...))
+		{
+			DWORD controlIndex = GET_CTRL_TYPE_INDEX(controlId, controlType);
+			if (controlIndex >= 0)
+			{
+				return this->controls[controlType - 1][controlIndex];
+			}
+		}
+	}
+
+	return nullptr;
+}
+
 static LRESULT CALLBACK StaticWindowProcedure(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	Window_t* window = nullptr;
+	if (message != WM_CREATE)
+	{
+		window = (Window_t*)GetWindowLongPtrW(hWnd, GWLP_USERDATA);
+	}
+
 	switch (message)
 	{
 		case WM_CREATE:
@@ -278,14 +344,15 @@ static LRESULT CALLBACK StaticWindowProcedure(HWND hWnd, UINT message, WPARAM wP
 
 		case WM_COMMAND:
 			{
-				BEGIN_VALIDATE_WINDOW_CONTROL_TYPE(hWnd, controlId, LOWORD(wParam))
-					DWORD controlIndex = GET_CTRL_TYPE_INDEX(controlId, controType);
+				if (window->GetHandler())
+				{
+					BEGIN_VALIDATE_WINDOW_CONTROL_TYPE(hWnd, controlId, LOWORD(wParam))
+						DWORD controlIndex = GET_CTRL_TYPE_INDEX(controlId, controType);
 					if (controlIndex >= 0)
 					{
 						DWORD eventId = HIWORD(wParam);
 						// DWORD MessageId = LOWORD(wParam);
-						
-						Window_t* window = (Window_t*)GetWindowLongPtrW(hWnd, GWLP_USERDATA);
+
 						const WControlsArray_t* controls = window->GetAllControls();
 						WControl_t* control = (*controls)[controType - 1][controlIndex];
 						
@@ -304,49 +371,29 @@ static LRESULT CALLBACK StaticWindowProcedure(HWND hWnd, UINT message, WPARAM wP
 
 						return control->OnCommand(wParam, lParam);
 					}
-				END_VALIDATE_WINDOW_CONTROL_TYPE
+					END_VALIDATE_WINDOW_CONTROL_TYPE
+				}
 
 				return DefWindowProc(hWnd, message, wParam, lParam);
 			}
 			break;
 		case WM_CTLCOLOREDIT:
 			{
-				if (lParam > 0)
+				WControl_t* control = window->GetControlInTypes(
+					(HWND)lParam, ControlTypes::EDIT);
+				if (control)
 				{
-					int controlId = GetDlgCtrlID((HWND)lParam);
-					ControlTypes controType = Window_t::GetControlType(hWnd, controlId);
-					if (controType == ControlTypes::EDIT)
-					{
-						DWORD controlIndex = GET_CTRL_TYPE_INDEX(controlId, controType);
-						if (controlIndex >= 0)
-						{
-							Window_t* window = (Window_t*)GetWindowLongPtrW(hWnd, GWLP_USERDATA);
-							const WControlsArray_t* controls = window->GetAllControls();
-							WControl_t* control = (*controls)[controType - 1][controlIndex];
-							return control->OnColorChange(wParam, lParam);
-						}
-					}
+					return control->OnColorChange(wParam, lParam);
 				}
 			}
 			break;
 		case WM_CTLCOLORSTATIC:
 			{
-				if (lParam > 0)
+				WControl_t* control = window->GetControlInTypes(
+					(HWND)lParam, ControlTypes::LABEL, ControlTypes::EDIT);
+				if (control)
 				{
-					int controlId = GetDlgCtrlID((HWND)lParam);
-					ControlTypes controType = Window_t::GetControlType(hWnd, controlId);
-					// edit are considered for readonly or disabled edit controls.
-					if (controType == ControlTypes::LABEL || controType == ControlTypes::EDIT)
-					{
-						DWORD controlIndex = GET_CTRL_TYPE_INDEX(controlId, controType);
-						if (controlIndex >= 0)
-						{
-							Window_t* window = (Window_t*)GetWindowLongPtrW(hWnd, GWLP_USERDATA);
-							const WControlsArray_t* controls = window->GetAllControls();
-							WControl_t* control = (*controls)[controType - 1][controlIndex];
-							return control->OnColorChange(wParam, lParam);
-						}
-					}
+					return control->OnColorChange(wParam, lParam);
 				}
 			}
 			break;
@@ -358,18 +405,10 @@ static LRESULT CALLBACK StaticWindowProcedure(HWND hWnd, UINT message, WPARAM wP
 				
 				if (wParam > 0)
 				{
-					int controlId = GetDlgCtrlID((HWND)wParam);
-					ControlTypes controType = Window_t::GetControlType(hWnd, controlId);
-					if (controType != ControlTypes::UNKNOWN)
+					WControl_t* control = window->GetControlOutOfTypes((HWND)wParam, ControlTypes::UNKNOWN);
+					if (control)
 					{
-						DWORD controlIndex = GET_CTRL_TYPE_INDEX(controlId, controType);
-						if (controlIndex >= 0)
-						{
-							Window_t* window = (Window_t*)GetWindowLongPtrW(hWnd, GWLP_USERDATA);
-							const WControlsArray_t* controls = window->GetAllControls();
-							WControl_t* control = (*controls)[controType - 1][controlIndex];
-							return control->OnPaint(hdc, ps);
-						}
+						return control->OnPaint(hdc, ps);
 					}
 				}
 
