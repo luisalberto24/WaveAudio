@@ -35,6 +35,8 @@ class Window_t
 		VOID						SetWindowMessageProcedure	(const WNDMESSAGELOOPPROC wndMessageProcedure);
 		inline ControlTypes			GetControlType				(DWORD controlId);
 		inline ControlTypes			GetControlType				(HWND controlHandler);
+		inline VOID 				SetStyleOn					(DWORD style);
+		inline VOID 				SetStyleOff					(DWORD style);
 	public: // templates			
 		template<typename T>
 		VOID						RegisterControl				(WControlAttributes_t controlAttributes)

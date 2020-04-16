@@ -1,4 +1,7 @@
 #include <vector>
+#include<iostream> 
+#include <sstream>  // for string streams 
+#include <string>  // for string 
 #include "Window_t.h"
 
 Window_t::Window_t()
@@ -62,10 +65,10 @@ WORD Window_t::RegisterWindow()
 	this->windowclass.hInstance		=	this->instance;
 	this->windowclass.hIcon			=	NULL;
 	this->windowclass.hCursor		=	LoadCursor(NULL, IDC_ARROW);
-	this->windowclass.hbrBackground =	(HBRUSH)(COLOR_WINDOW + 1);
+	this->windowclass.hbrBackground	=	(HBRUSH)(COLOR_WINDOW + 1);
 	this->windowclass.lpszMenuName	=	NULL;
-	this->windowclass.lpszClassName =	_bstr_t(this->className.c_str());
-	this->windowclass.hIconSm		=	NULL;
+	this->windowclass.lpszClassName	=	_bstr_t(this->className.c_str());
+	this->windowclass.hIconSm	=	NULL;
 
 	return RegisterClassExW(&this->windowclass);
 }
@@ -96,19 +99,11 @@ BOOL Window_t::Show(int showCommand)
 		return FALSE;
 	}
 
-	ShowWindow(this->handler, showCommand);
-	UpdateWindow(this->handler);
-	SetWindowTextW(this->handler, this->title.c_str());
+	::ShowWindow(this->handler, showCommand);
+	::UpdateWindow(this->handler);
+	::SetWindowTextW(this->handler, this->title.c_str());
 	
-	SetWindowLongW(
-		this->handler, 
-		GWL_STYLE, 
-		GetWindowLong(this->handler, GWL_STYLE) & ~WS_MAXIMIZEBOX);
-
-	SetWindowLongW(
-		this->handler,
-		GWL_STYLE,
-		GetWindowLong(this->handler, GWL_STYLE) & ~WS_SIZEBOX);
+	this->SetStyleOff(WS_MAXIMIZEBOX | WS_SIZEBOX);
 
 	return TRUE;
 }
@@ -138,12 +133,10 @@ const	WControlsArray_t* Window_t::GetAllControls()
 
 std::wstring Window_t::GetLastErrorMessage()
 {
-	std::wstring lastErrorMessage(' ', MAX_ERROR_BUFFER_SIZE);
 	DWORD error = GetLastError();
 	if (error)
 	{
-		lastErrorMessage.clear();
-		LPVOID messageBuffer;
+		LPVOID messageBuffer = NULL;
 		DWORD bufferLength = FormatMessage(
 			FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 			NULL,
@@ -153,28 +146,21 @@ std::wstring Window_t::GetLastErrorMessage()
 			0,
 			NULL);
 
-		if (bufferLength <= MAX_ERROR_BUFFER_SIZE)
+		if (bufferLength > 0 && bufferLength <= MAX_ERROR_BUFFER_SIZE)
 		{
-			LPCWSTR formatText = L"Error code: %d, Message: %.*s";
-			LPWSTR errorMsgPtr = (LPWSTR)lastErrorMessage.c_str();
-			_snwprintf_s(
-				errorMsgPtr,
-				MAX_ERROR_BUFFER_SIZE,
-				MAX_ERROR_BUFFER_SIZE,
-				formatText,
-				error, 
-				bufferLength, 
-				messageBuffer);
+			wostringstream  message;
+			message << "Error code: ";
+			message << error;
+			message << ", Message: ";
+			message << (LPCWSTR)messageBuffer;
 
 			LocalFree(messageBuffer);
+
+			return message.str();
 		}
 	}
-	else
-	{
-		lastErrorMessage.clear();
-	}
 
-	return lastErrorMessage;
+	return std::wstring(L"");
 }
 VOID Window_t::GetLastErrorMessageBox(HWND windowHandler, std::wstring title)
 {
@@ -209,6 +195,22 @@ inline ControlTypes	Window_t::GetControlType(HWND controlHandler)
 {
 	int controlId = GetDlgCtrlID(controlHandler);
 	return Window_t::GetControlType(this->handler, controlId);
+}
+
+inline VOID Window_t::SetStyleOn(DWORD style)
+{
+	::SetWindowLongW(
+		this->handler,
+		GWL_STYLE,
+		GetWindowLong(this->handler, GWL_STYLE) | style);
+}
+
+inline VOID Window_t::SetStyleOff(DWORD style)
+{
+	::SetWindowLongW(
+		this->handler,
+		GWL_STYLE,
+		GetWindowLong(this->handler, GWL_STYLE) & ~style);
 }
 
 ControlTypes Window_t::GetControlType(HWND windowHandler, DWORD controlId)
