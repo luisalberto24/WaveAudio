@@ -69,8 +69,6 @@ VOID WDialog_t::Destroy()
 
 INT_PTR WDialog_t::OnCreate(UINT messageId, WPARAM wParam, LPARAM lParam)
 {
-	RECT windowRect;
-	GetWindowRect(this->parentHandler, &windowRect);
 	if (this->title.length() > 0) SetWindowTextW(this->handler, this->title.c_str());
 	
 	return 1;
