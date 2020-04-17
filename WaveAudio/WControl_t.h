@@ -27,7 +27,7 @@ class WControl_t : public IWControl_t
 	public:
 		WControl_t();
 		WControl_t(WControlAttributes_t attributes);
-		virtual	~WControl_t			();
+		virtual	~WControl_t();
 	public:
 		const LPVOID GetWindow();
 		HWND GetControlHandler();
@@ -36,7 +36,7 @@ class WControl_t : public IWControl_t
 		WORD GetControlId();
 		WORD GetControlType();
 		const WControlAttributes_t GetAttributes();
-        VOID SetAttributes(WControlAttributes_t attributes);
+		VOID SetAttributes(WControlAttributes_t attributes);
 		virtual LRESULT OnCreate(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnPaint(HDC dcHandler,	PAINTSTRUCT ps);
 		virtual LRESULT OnColorChange(WPARAM wParam, LPARAM lParam);

@@ -53,7 +53,6 @@ BOOL WaveAudioRIFF_t::Save(std::wstring fileName)
 		std::wstring directoryName = Utilities::GetFileDirectory(fileName);
 		if (Utilities::DirectoryExists(directoryName))
 		{
-			BOOL createFile = TRUE;
 			if (Utilities::FileExists(fileName))
 			{
 				int resultCode = MessageBoxW(NULL, L"File already exists!. Do you want to replace it?", L"Warning!",	MB_ICONEXCLAMATION | MB_APPLMODAL | MB_OKCANCEL);
