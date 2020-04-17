@@ -7,7 +7,7 @@
 
 typedef struct tagWvAudioRIFF_t
 {
-	const char*	FileType = "RIFF";
+	LPCSTR FileType = "RIFF";
 	DWORD FileSize;
 	LPCSTR WaveId = "WAVE";
 	LPCSTR WaveChunkId = "fmt ";

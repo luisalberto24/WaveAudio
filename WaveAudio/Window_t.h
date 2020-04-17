@@ -61,7 +61,7 @@ class Window_t
 	public:
 		static ControlTypes GetControlType(HWND windowHandler, DWORD controlId);
 		static std::wstring GetLastErrorMessage();
-		static VOID	GetLastErrorMessageBox(HWND windowHandler, std::wstring title);
+		static VOID GetLastErrorMessageBox(HWND windowHandler, std::wstring title);
 	private:
 		WORD RegisterWindow();
 	private:
