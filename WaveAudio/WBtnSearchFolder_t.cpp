@@ -8,6 +8,7 @@ WBtnSearchFolder_t::WBtnSearchFolder_t()
 WBtnSearchFolder_t::WBtnSearchFolder_t(WControlAttributes_t attributes) : WControl_t(attributes)
 {
 }
+
 WBtnSearchFolder_t::~WBtnSearchFolder_t()
 {
 	WControl_t::~WControl_t();
@@ -30,4 +31,3 @@ LRESULT	WBtnSearchFolder_t::OnClick(WPARAM wParam, LPARAM lParam)
 
 	return 0;
 }
-

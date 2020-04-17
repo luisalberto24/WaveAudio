@@ -3,7 +3,6 @@
 
 WDialogBoxOk_t::WDialogBoxOk_t()
 {
-
 }
 
 WDialogBoxOk_t::WDialogBoxOk_t(UINT dialogId)

@@ -3,8 +3,6 @@
 #include <mmsystem.h>
 #include <amstream.h>
 
-using namespace std;
-
 WaveAudioRIFF_t::WaveAudioRIFF_t()
 { 
 	this->riffData = {}; 
@@ -88,7 +86,7 @@ BOOL WaveAudioRIFF_t::Save(std::wstring fileName)
 	return FALSE;
 }
 
-LPCSTR	WaveAudioRIFF_t::GetDataPointer()
+LPCSTR WaveAudioRIFF_t::GetDataPointer()
 {
 	return (LPCSTR)this->riffData.Data;
 }

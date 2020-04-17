@@ -126,7 +126,7 @@ MSG	Window_t::Loop()
 	return message;
 }
 
-const	WControlsArray_t* Window_t::GetAllControls()
+const WControlsArray_t* Window_t::GetAllControls()
 {
 	return &this->controls;
 }
@@ -162,6 +162,7 @@ std::wstring Window_t::GetLastErrorMessage()
 
 	return std::wstring(L"");
 }
+
 VOID Window_t::GetLastErrorMessageBox(HWND windowHandler, std::wstring title)
 {
 	std::wstring errorMessage = Window_t::GetLastErrorMessage();

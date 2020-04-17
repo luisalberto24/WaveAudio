@@ -14,9 +14,9 @@ WControl_t::~WControl_t()
 {
 }
 
-const VOID*	WControl_t::GetWindow()
+const LPVOID WControl_t::GetWindow()
 {
-	return (const VOID*)this->attributes.Window;
+	return (const LPVOID)this->attributes.Window;
 }
 
 HWND WControl_t::GetControlHandler()
@@ -46,24 +46,25 @@ WORD WControl_t::GetControlType()
 {
 	return static_cast<WORD>(this->attributes.TypeId);
 }
-const WControlAttributes_t	WControl_t::GetAttributes()
+
+const WControlAttributes_t WControl_t::GetAttributes()
 {
 	return this->attributes;
 }
 
-void	WControl_t::SetAttributes(WControlAttributes_t attributes)
+void WControl_t::SetAttributes(WControlAttributes_t attributes)
 {
 	this->attributes = { 0 };
-	this->attributes.ControlId				=	attributes.ControlId;
-	this->attributes.Handler				=	attributes.Handler;
-	this->attributes.TypeId					=	attributes.TypeId;
-	this->attributes.ParentHandler			=	attributes.ParentHandler;
-	this->attributes.ModuleId				=	attributes.ModuleId;
-	this->attributes.ExStyle				=	attributes.ExStyle;
-	this->attributes.Style					=	attributes.Style;
-	this->attributes.Coordinates			=	attributes.Coordinates;
-	this->attributes.Window					=	attributes.Window;
-	this->attributes.Created				=	attributes.Created;
+	this->attributes.ControlId = attributes.ControlId;
+	this->attributes.Handler = attributes.Handler;
+	this->attributes.TypeId = attributes.TypeId;
+	this->attributes.ParentHandler = attributes.ParentHandler;
+	this->attributes.ModuleId = attributes.ModuleId;
+	this->attributes.ExStyle = attributes.ExStyle;
+	this->attributes.Style = attributes.Style;
+	this->attributes.Coordinates = attributes.Coordinates;
+	this->attributes.Window = attributes.Window;
+	this->attributes.Created = attributes.Created;
 
 	memcpy(this->attributes.ClassName, attributes.ClassName,
 		sizeof(attributes.ClassName) / sizeof(attributes.ClassName[0]));

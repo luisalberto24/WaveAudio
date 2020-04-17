@@ -25,6 +25,7 @@ LRESULT	WSpinner_t::OnCreate(WPARAM wParam, LPARAM lParam)
 
 	return 0;
 }
+
 LRESULT	WSpinner_t::OnPaint(HDC dcHandler, PAINTSTRUCT ps)
 {
 	return WControl_t::OnPaint(dcHandler, ps);
