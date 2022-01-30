@@ -24,14 +24,15 @@ class Utilities
 			{
 				T elements[] = { a, arguments... };
 				DWORD i = 1;
-				for (; i < sizeof...(Ts) + 1; i++) {
+				DWORD itemsCount = sizeof...(Ts) + 1;
+				for (; i < itemsCount; i++) {
 					if (elements[0] == elements[i])
 					{
 						break;
 					}
 				}
 
-				return (i != (sizeof...(Ts) + 1)) ? TRUE : FALSE;
+				return (i != itemsCount) ? TRUE : FALSE;
 			}
 
 			return TRUE;
