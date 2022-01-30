@@ -34,7 +34,8 @@ RECT WControl_t::GetRectangle()
 
 VOID WControl_t::Invalidate(BOOL erase)
 {
-	InvalidateRect(this->attributes.Handler, &this->GetRectangle(), erase);
+	RECT rectangle = this->GetRectangle();
+	InvalidateRect(this->attributes.Handler, &rectangle, erase);
 }
 
 WORD WControl_t::GetControlId()
